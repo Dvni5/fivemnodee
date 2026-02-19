@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التحكم والإعدادات | FiveM Node</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #ff4444; --bg: #0a0a0a; --card-bg: #161616; }
+        body { background-color: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; user-select: none; }
+        .nav-header { display: flex; justify-content: space-between; align-items: center; max-width: 1000px; margin: 0 auto 30px; }
+        .back-btn { color: #fff; text-decoration: none; font-size: 1.1rem; transition: 0.3s; background: #222; padding: 8px 15px; border-radius: 8px; }
+        .back-btn:hover { background: var(--primary); }
+        .table-container { max-width: 1000px; margin: 0 auto; background: var(--card-bg); border-radius: 15px; overflow: hidden; border: 1px solid #222; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        table { width: 100%; border-collapse: collapse; text-align: right; }
+        th { background: #1f1f1f; color: var(--primary); padding: 20px; font-size: 1.1rem; border-bottom: 2px solid var(--primary); }
+        td { padding: 18px; border-bottom: 1px solid #222; vertical-align: middle; }
+        .copy-btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; transition: 0.3s; font-weight: bold; }
+        .copy-btn:hover { background: #cc0000; transform: translateY(-2px); }
+        .command-text { font-family: 'Courier New', monospace; color: #3498db; background: #000; padding: 8px 12px; border-radius: 6px; display: inline-block; direction: ltr; border: 1px solid #333; }
+        #copy-toast { visibility: hidden; min-width: 250px; background-color: #3498db; color: #fff; text-align: center; border-radius: 8px; padding: 15px; position: fixed; z-index: 100; bottom: 30px; left: 50%; transform: translateX(-50%); font-weight: bold; }
+        #copy-toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <div class="nav-header">
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i> العودة للرئيسية</a>
+        <h2 style="color: var(--primary); margin: 0;">🛠️ التحكم والإعدادات (F8)</h2>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>الوصف</th>
+                    <th>الأمر (F8)</th>
+                    <th>الإجراء</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>إلغاء أي اختصار قديم</td>
+                    <td><span class="command-text">unbind keyboard [الحرف]</span></td>
+                    <td><button class="copy-btn" onclick="copyCmd('unbind keyboard ')">نسخ الكود</button></td>
+                </tr>
+                <tr>
+                    <td>إظهار قائمة البنق والـ FPS</td>
+                    <td><span class="command-text">cl_drawperf 1</span></td>
+                    <td><button class="copy-btn" onclick="copyCmd('cl_drawperf 1')">نسخ الكود</button></td>
+                </tr>
+                <tr>
+                    <td>إخفاء قائمة البنق</td>
+                    <td><span class="command-text">cl_drawperf 0</span></td>
+                    <td><button class="copy-btn" onclick="copyCmd('cl_drawperf 0')">نسخ الكود</button></td>
+                </tr>
+                <tr>
+                    <td>تقفيل أي قائمة عالقة</td>
+                    <td><span class="command-text">/Closed7z</span></td>
+                    <td><button class="copy-btn" onclick="copyCmd('/Closed7z')">نسخ الكود</button></td>
+                </tr>
+                <tr>
+                    <td>إخفاء نقطة الأيم الأصلية</td>
+                    <td><span class="command-text">profile_reticulesize -10</span></td>
+                    <td><button class="copy-btn" onclick="copyCmd('profile_reticulesize -10')">نسخ الكود</button></td>
+                </tr>
+                <tr>
+                    <td>إظهار نقطة الأيم الأصلية</td>
+                    <td><span class="command-text">profile_reticulesize 0</span></td>
+                    <td><button class="copy-btn" onclick="copyCmd('profile_reticulesize 0')">نسخ الكود</button></td>
+                </tr>
+                <tr>
+                    <td>زيادة عرض اليد (FOV)</td>
+                    <td><span class="command-text">profile_fpsFieldOfView 1000</span></td>
+                    <td><button class="copy-btn" onclick="copyCmd('profile_fpsFieldOfView 1000')">نسخ الكود</button></td>
+                </tr>
+                <tr>
+                    <td>الخروج السريع (تلفيت)</td>
+                    <td><span class="command-text">quit "Game Crashed fivem.exe+A96660"</span></td>
+                    <td><button class="copy-btn" onclick="copyCmd('quit \"Game Crashed fivem.exe+A96660\"')">نسخ الكود</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="copy-toast">تم نسخ كود الإعدادات بنجاح! ⚙️</div>
+
+    <script>
+        function copyCmd(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                var toast = document.getElementById("copy-toast");
+                toast.className = "show";
+                setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+            });
+        }
+    </script>
+</body>
+</html>
